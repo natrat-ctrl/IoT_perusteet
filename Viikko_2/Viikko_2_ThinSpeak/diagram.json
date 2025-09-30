@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-pi-pico-w",
+      "id": "pico",
+      "top": 35.15,
+      "left": -159.65,
+      "attrs": { "env": "micropython-20241129-v1.24.1" }
+    },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -76.5, "left": 196.2, "attrs": {} }
+  ],
+  "connections": [
+    [ "pico:GND.8", "dht1:GND", "black", [ "h326.71", "v0" ] ],
+    [ "pico:3V3_EN", "dht1:VCC", "red", [ "h297.91", "v-38.4" ] ],
+    [ "pico:GP15", "dht1:SDA", "green", [ "h-28.8", "v19.24", "h393.6", "v0", "h9.6" ] ]
+  ],
+  "dependencies": {}
+}
