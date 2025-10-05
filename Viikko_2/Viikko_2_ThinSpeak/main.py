@@ -1,36 +1,51 @@
-import dht
 import network
+import time
 import urequests
-import utime
+import dht
 from machine import Pin
 
-API_URL = "http://192.168.50.147:8000/api/sensor"
 ssid = "Wokwi-GUEST"
 password = ""
 
-sensor = dht.DHT22(Pin(15))
+THINGSPEAK_API_KEY = "95AI144FCG29PN0T"
+THINGSPEAK_URL = "https://api.thingspeak.com/update"
 
-print("Connecting to WiFi", end="")
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 wlan.connect(ssid, password)
+
+print("Connecting to Wi-Fi...", end="")
 while not wlan.isconnected():
     print(".", end="")
-    utime.sleep(0.1)
-print(" Connected!")
+    time.sleep(0.5)
+
+print("\nConnected!")
+print("IP address:", wlan.ifconfig()[0])
+
+sensor = dht.DHT22(Pin(15))
+
+def send_to_thingspeak(temp):
+    if temp is None:
+        print("Nothing to send")
+        return
+    try:
+        response = urequests.post(
+            THINGSPEAK_URL,
+            data="api_key={}&field1={}".format(THINGSPEAK_API_KEY, temp),
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        )
+        print("Data sent to ThingSpeak:", response.text)
+        response.close()
+    except Exception as e:
+        print("Failed sending data:", e)
 
 while True:
     try:
         sensor.measure()
-        temp: float = sensor.temperature()
-        humidity: float = sensor.humidity()
-        print(f"Temperature: {temp:.1f}C, Humidity: {humidity:.1f}%")
-        r = urequests.post(
-            API_URL,
-            json={"temperature": temp, "humidity": humidity, "status": "OK"},
-            headers={"Content-Type": "application/json"},
-        )
-        r.close()
-    except OSError as e:
-        print("Sensor read error:", e)
-    utime.sleep(10)
+        temperature = sensor.temperature()
+        print("Temperature:", temperature, "°C")
+        send_to_thingspeak(temperature)
+    except Exception as e:
+        print("Error reading sensor or sending data:", e)
+
+    time.sleep(15)
