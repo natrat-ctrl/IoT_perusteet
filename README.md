@@ -24,16 +24,6 @@ This pipeline demonstrates how sensor data can be collected, transmitted, and vi
 
 ---
 
-## 📊 Diagram
-
-The following diagram illustrates the final visualization of temperature data using Google Charts:
-
-![Temperature Line Chart](Image20251001151958.png)
-
-This chart shows the temperature readings over time, fetched from ThingSpeak and rendered dynamically in the browser.
-
----
-
 ## 📁 Files Included
 
 - `server.js`: Node.js WebSocket server implementation.
