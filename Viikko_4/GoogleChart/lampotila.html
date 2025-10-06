@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lämpötilakaavio (ThingSpeak)</title>
+
+    <!-- ✅ Tämä script-tagi puuttui koodistasi -->
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script>
+      google.charts.load('current', { packages: ['corechart'] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        const url =
+          "https://api.thingspeak.com/channels/3088143/feeds.json?api_key=3E5SCJNQ6QWIDDL4&results=10";
+
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            const feeds = data.feeds;
+            const chartData = [['Aika', 'Lämpötila (°C)']];
+
+            feeds.forEach(feed => {
+              const time = new Date(feed.created_at);
+              const temp = parseFloat(feed.field1);
+              if (!isNaN(temp)) {
+                chartData.push([time, temp]);
+              }
+            });
+
+            const dataTable = google.visualization.arrayToDataTable(chartData);
+
+            const options = {
+              title: 'Lämpötila ajan suhteen (ThingSpeak)',
+              curveType: 'function',
+              legend: { position: 'bottom' },
+              hAxis: { title: 'Aika', format: 'HH:mm' },
+              vAxis: { title: 'Lämpötila (°C)' },
+              backgroundColor: '#f9f9f9'
+            };
+
+            const chart = new google.visualization.LineChart(
+              document.getElementById('chart_div')
+            );
+            chart.draw(dataTable, options);
+          })
+          .catch(error => {
+            console.error("Virhe ThingSpeak-datan haussa:", error);
+            document.getElementById('chart_div').innerHTML = "<b>Virhe datan haussa!</b>";
+          });
+      }
