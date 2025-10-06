@@ -90,6 +90,15 @@ The project follows a basic IoT data pipeline:
 4. **Frontend Visualization**:
    - JavaScript fetches temperature data from ThingSpeak.
    - Google Charts renders a line chart showing temperature trends over time.
+---
+# Temperature Charts
+This project visualizes temperature data from ThingSpeak using Google Charts.  
+Below you can see two different chart images side by side: one from the browser and one directly from ThingSpeak.
+
+<div style="display: flex; gap: 20px;">
+  <img src="images/chart.png.png" alt="From Browser" width="400">
+  <img src="images/thinsepak_chart-ong-png" alt="From ThingSpeak" width="400">
+</div>
 
 This pipeline demonstrates how sensor data can be collected, transmitted, and visualized in a web application.
 ---
